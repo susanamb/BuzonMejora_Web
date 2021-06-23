@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block content %}
+
+    <div class="list-group" style="margin-right: 30%; margin-left: 30%;">
+        {% for folio,stat in data.items() %}
+        <a href="/selectedqs/{{folio}}" class="list-group-item list-group-item-action" style="background-color: #FFC300;">
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">Folio : {{folio}}</h5>
+            
+          </div>
+          <p class="mb-1"></p>
+          {%if folio[2] == 'Q'%}
+          <h6 class="mb-1">Queja</h6>
+            {%elif folio[2] == 'S'%}
+            <h6 class="mb-1">Sugerencia</h6>
+          {% endif %}
+          <small>{{stat}}</small>
+        </a>
+        <br>
+        {% endfor%}
+      </div>
+  <a class="btn btn-outline-success" href="menuadmin" role="button" style="position:fixed; bottom: 7%; right: 12%; width: 10%;">Regresar</a>
+
+  {% endblock %}

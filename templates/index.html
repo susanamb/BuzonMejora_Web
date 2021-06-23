@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1 class="display-3 text-success text-center"><strong>¡Bienvenido!</strong></h1>
+      <br>
+      <div class="jumbotron jumbotron-fluid text-center" style="background-color: #FFC300; margin-left: 20%; margin-right: 20%;">
+        <div class="container">
+          <h1 class="display-4">Seguimiento</h1>
+          <p class="lead">Inicia sesión para dar seguimiento a las quejas y sugerencias realizadas por el alumnado de la Facultad de Contaduría y Administración.</p>
+          <hr class="my-4">
+          <a class="btn btn-success btn-lg btn-block" href="login" role="button">Inicia sesión</a>
+        </div>
+      </div>
+
+      <h2 class="display-4 text-center">Casos resueltos</h2><br>
+      <h2 class="display-4 text-center">{{ cr }}</h2>
+
+  {% endblock %}

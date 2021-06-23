@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block content %}
+
+
+    <div class="form-group display-4 text-center">
+        <label for="exampleFormControlInput1">Folio:</label>
+        <p><label for="exampleFormControlInput1"><strong>{{folio}}</strong></label></p>
+      </div>
+    <div class="form-group text-center" style="font-size: xx-large;">
+      <label for="exampleFormControlInput1">Categoria</label>
+      <p><label for="exampleFormControlInput1"><strong>{{data.Categoria}}</strong></label></p>
+    </div>
+    <div class="form-group text-center" style="font-size: xx-large;">
+        <label for="exampleFormControlInput1">Asunto</label>
+        <p><label for="exampleFormControlInput1"><strong>{{data.Asunto}}</strong></label></p>
+      </div>
+      <div class="form-group text-center" style="font-size: xx-large;">
+        <label for="exampleFormControlInput1">Comentario</label>
+        <p><label for="exampleFormControlInput1"><strong>{{data.Comentario}}</strong></label></p>
+      </div>
+    <h1 class="text-center" style="font-size: x-large;">Seguimiento</h1>
+
+    <form action="/update/{{folio}}" method="POST">
+    <div class="form-group col-md-6" style="width: 30%; margin-left: 35%; margin-right: 35%;">
+        <select class="form-control align-content-lg-center" name="status" id="exampleFormControlSelect1">
+          <option value="Pendiente">Pendiente</option>
+          <option value="Resuelto">Resuelto</option>
+          <option value="FaltaInformacion">Falta Información</option>
+        </select>
+      </div>
+    <div class="form-group text-center" style="font-size: x-large;">
+      <label for="exampleFormControlTextarea1">Observaciones</label>
+      <textarea class="form-control text-center" name="observacion" style="width: 60%; margin-left: 20%; margin-right: 20%;" id="exampleFormControlTextarea1" rows="3" placeholder="Escribe las observaciones(opcional)"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary text-center" style="background-color: #136F33; margin-left: 37%; margin-right: 37%; width: 26%; font-size: large;">Actualizar</button>
+
+  </form>
+{% endblock %}

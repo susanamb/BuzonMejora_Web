@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="jumbotron text-center" style="background-color: #FFFFFF;">
+    <h1 class="display-4">Restablece tu Contraseña</h1><br>
+
+    <form action="/resetpasswor" method="POST">
+        <div class="form-group">
+          <p class="lead text-center" style="width: 60%; margin-left: 20%;">Ingresa tu usuario UABC y se enviará un correo con un enlace para restablecer tu contraseña.</p>
+          <label for="exampleInputEmail1">Correo UABC</label>
+          <input type="correo" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" style="width: 30%; margin-left: 35%; margin-right: 35%;" value="@uabc.edu.mx">
+        </div>
+        <button type="submit" class="btn btn-warning btn-lg">Enviar</button>
+      </form>
+      <a class="btn btn-outline-success" href="login" role="button" style="position:fixed; bottom: 31%; right: 23%; width: 10%;">Regresar</a>
+
+  </div>
+
+{% endblock %}

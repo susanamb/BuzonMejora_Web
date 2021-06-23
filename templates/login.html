@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block content %}
+      <br>
+      <h1 class="display-4 text-center" ><strong>Iniciar Sesión</strong></h1>
+      <br>
+      
+      <form action="/loguser" method="POST" class="text-center" style= "margin-left: 40%; margin-right: 40%; font-size: x-large;">
+        <div class="form-group">
+          <label for="exampleInputEmail1">Correo UABC</label>
+          <input type="email" name="correo" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="@uabc.edu.mx">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Contraseña</label>
+          <input type="password" name="contrasena" class="form-control" id="exampleInputPassword1" placeholder="Password">
+          <a href="resetpass"><small id="emailHelp" class="form-text text-muted">¿Olvidaste tu Contraseña?</small></a>
+
+        </div><br>
+        <button type="submit" class="btn btn-primary" style="background-color: #136F33; width:100%; font-size: large;">Entrar</button>
+      </form>
+      
+      {% endblock %}
