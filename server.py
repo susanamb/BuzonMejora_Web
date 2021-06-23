@@ -6,6 +6,7 @@ auth = firebase.auth()
 
 app = Flask(__name__)
 
+#index con contador de casos resueltos
 @app.route("/") 
 def home():
     cr = 0
@@ -42,6 +43,7 @@ def registro():
 def resetpass():
     return render_template("resetpass.html")
 
+#muestra la lista de todas las quejas y sugerencias
 @app.route('/displaydata')
 def displaydata():
     folios=[]
@@ -55,25 +57,30 @@ def displaydata():
 
     return render_template("displaydata.html",data=data)
 
+#muestra los datos de la queja/sugerencia seleccionada
 @app.route("/selectedqs/<folio>")
 def selectedqs(folio):
+    if db.child("Quejas y Sugerencias").child(folio).get():
 
-    obs = db.child("Quejas y Sugerencias").child(folio).child("Observacion").get()
-    if obs.val():
-        print('hay algo')
-        observacion = obs.val()
+        obs = db.child("Quejas y Sugerencias").child(folio).child("Observacion").get()
+        db.child("Quejas y Sugerencias").child(folio).update({"Status": "Pendiente, leído"})
+        if obs.val():
+            print('hay algo')
+            observacion = obs.val()
+        else:
+            observacion = " "
+        data = {
+            "Categoria":(db.child("Quejas y Sugerencias").child(folio).child("Categoria").get()).val(),
+            "Asunto":(db.child("Quejas y Sugerencias").child(folio).child("Asunto").get()).val(),
+            "Comentario":(db.child("Quejas y Sugerencias").child(folio).child("Comentario").get()).val(),
+            "Status":(db.child("Quejas y Sugerencias").child(folio).child("Status").get()).val(),
+            "Observacion" : observacion
+        }
+        return render_template("selectedqs.html", data = data, folio=folio)
     else:
-        observacion = " "
-    data = {
-        "Categoria":(db.child("Quejas y Sugerencias").child(folio).child("Categoria").get()).val(),
-        "Asunto":(db.child("Quejas y Sugerencias").child(folio).child("Asunto").get()).val(),
-        "Comentario":(db.child("Quejas y Sugerencias").child(folio).child("Comentario").get()).val(),
-        "Status":(db.child("Quejas y Sugerencias").child(folio).child("Status").get()).val(),
-        "Observacion" : observacion
-    }
-   
+        return "<h1>No existe el folio!</h1>"
 
-    return render_template("selectedqs.html", data = data, folio=folio)
+    
 
 #actualiza el status y agrega las observaciones del admin 
 #--------------PENDIENTE!------------------
