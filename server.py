@@ -70,7 +70,6 @@ def selectedqs(folio):
         
         if obs.val():
             observacion = obs.val()
-            print(observacion)
         else:
             observacion = " "
         data = {
@@ -118,7 +117,7 @@ def loginuser():
         if user:
             return redirect('/menuadmin')
     except:
-        return "<h1>Correo o constraseña incorrecta</h1><p><a href='login'>Intentalo de nuevo</p>"
+        return render_template("login.html", user = "no")
 
 @app.route("/resetpasswor", methods = ['POST'])
 def ressetpas():
