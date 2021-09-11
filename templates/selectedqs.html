@@ -24,13 +24,23 @@
     <div class="form-group col-md-6" style="width: 30%; margin-left: 35%; margin-right: 35%;">
         <select class="form-control align-content-lg-center" name="status" id="exampleFormControlSelect1">
           <option value="Pendiente">Pendiente</option>
-          <option value="Resuelto">Resuelto</option>
+          {% if data.Status == "Resuelto"%}
+            <option value="Resuelto" selected>Resuelto</option>
+            {% else %}
+              <option value="Resuelto">Resuelto</option>
+          {% endif %}
+
+          {% if data.Status == "FaltaInformacion"%}
+              <option value="FaltaInformacion" selected>Falta Información</option>
+            {% else %}
           <option value="FaltaInformacion">Falta Información</option>
+          {% endif %}
+          
         </select>
       </div>
     <div class="form-group text-center" style="font-size: x-large;">
       <label for="exampleFormControlTextarea1">Observaciones</label>
-      <textarea class="form-control text-center" name="observacion" style="width: 60%; margin-left: 20%; margin-right: 20%;" id="exampleFormControlTextarea1" rows="3" placeholder="Escribe las observaciones(opcional)"></textarea>
+      <textarea class="form-control text-center" name="observacion" style="width: 60%; margin-left: 20%; margin-right: 20%;" id="exampleFormControlTextarea1" rows="3" placeholder="Escribe las observaciones(opcional)">{{data.Observacion}}</textarea>
     </div>
     <button type="submit" class="btn btn-primary text-center" style="background-color: #136F33; margin-left: 37%; margin-right: 37%; width: 26%; font-size: large;">Actualizar</button>
 

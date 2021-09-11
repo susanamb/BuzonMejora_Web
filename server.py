@@ -63,10 +63,14 @@ def selectedqs(folio):
     if db.child("Quejas y Sugerencias").child(folio).get():
 
         obs = db.child("Quejas y Sugerencias").child(folio).child("Observacion").get()
-        db.child("Quejas y Sugerencias").child(folio).update({"Status": "Pendiente, leído"})
+        stat = db.child("Quejas y Sugerencias").child(folio).child("Status").get()
+
+        if stat.val() == "Pendiente, sin leer": #si el comentario esta pendiente y sin leer, al ser abierto saldrá que fue leido
+            db.child("Quejas y Sugerencias").child(folio).update({"Status": "Pendiente, leído"})
+        
         if obs.val():
-            print('hay algo')
             observacion = obs.val()
+            print(observacion)
         else:
             observacion = " "
         data = {
