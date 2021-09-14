@@ -1,23 +1,38 @@
 {% extends "layout.html" %}
 {% block content %}
       <br>
-      <h1 class="display-4 text-center" ><strong>Resgistro de Usuario</strong></h1>
+      <h1 class="display-4 text-center" ><strong>Registro de Usuario</strong></h1>
       <br>
       
-      <form action="/loguser" method="POST" class="text-center" style= "margin-left: 40%; margin-right: 40%; font-size: x-large;">
+      <form action="/saveuser" method="POST" class="text-center" style= "margin-left: 40%; margin-right: 40%; font-size: x-large;">
         <div class="form-group">
           <label for="exampleInputEmail1">Correo UABC</label>
           <input type="email" name="correo" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="@uabc.edu.mx">
         </div>
         <div class="form-group">
           <label for="exampleInputPassword1">Contraseña</label>
-          <input type="password" name="contrasena" class="form-control" id="exampleInputPassword1" placeholder="Password">
+          <input type="password" name="contrasena" class="form-control" id="exampleInputPassword1" placeholder="Password" minlength="6">
         </div>
         <div class="form-group">
             <label for="exampleInputPassword1">Confirma tu contraseña</label>
-            <input type="password" name="confirmacontrasena" class="form-control" id="exampleInputPassword1" placeholder="Password">
+            <input type="password" name="confirmacontrasena" class="form-control" id="exampleInputPassword1" placeholder="Password" minlength="6">
           </div><br>
+
+          <div class="alert alert-warning" role="alert">
+            {% if warnin == "claves"%}
+            Las contraseñas no coinciden
+            {% elif warnin == "correo"%}
+            Utiliza el correo institucional
+            {% endif %}
+          </div>
+          {% if warnin == "success" %}
+            <div class="alert alert-success" role="alert">
+              Usuario Guardado Correctamente
+            </div>
+          {% endif %}
+
         <button type="submit" class="btn btn-primary" style="background-color: #136F33; width:100%; font-size: large;">Guardar</button>
       </form>
-      
+      <a class="btn btn-outline-success" href="menuadmin" role="button" style="position:fixed; bottom: 7%; right: 12%; width: 10%;">Regresar</a>
+
       {% endblock %}

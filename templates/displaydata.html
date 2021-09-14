@@ -1,16 +1,20 @@
 {% extends "layout.html" %}
 {% block content %}
-<div class="dropdown">
-  <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Dropdown link
-  </a>
-
-  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-    <a class="dropdown-item" href="#">Action</a>
-    <a class="dropdown-item" href="#">Another action</a>
-    <a class="dropdown-item" href="#">Something else here</a>
+<!-- Example single danger button -->
+<div class="list-group" style="margin-left: 30%; width: 8%;">
+  <div class="btn-group">
+    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Mostrar
+    </button>
+    <div class="dropdown-menu">
+      <a class="dropdown-item" href="#">Quejas</a>
+      <a class="dropdown-item" href="#">Sugerencias</a>
+      <a class="dropdown-item" href="#">Pendientes</a>
+      <a class="dropdown-item" href="#">Resueltos</a>
+    </div>
   </div>
 </div>
+<br>
     <div class="list-group" style="margin-right: 30%; margin-left: 30%;">
 
         {% for folio,stat in data.items() %}
