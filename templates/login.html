@@ -7,13 +7,34 @@
       <form action="/loguser" method="POST" class="text-center" style= "margin-left: 40%; margin-right: 40%; font-size: x-large;">
         <div class="form-group">
           <label for="exampleInputEmail1">Correo UABC</label>
-          <input type="email" name="correo" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="@uabc.edu.mx">
+          <input type="email" name="correo" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value="@uabc.edu.mx" required>
         </div>
         <div class="form-group">
           <label for="exampleInputPassword1">Contraseña</label>
-          <input type="password" name="contrasena" class="form-control" id="exampleInputPassword1" placeholder="Password">
+          <input type="password" name="contrasena" class="form-control" id="exampleInputPassword1" placeholder="Password" required>
           <a href="resetpass"><small id="emailHelp" class="form-text text-muted">¿Olvidaste tu Contraseña?</small></a>
-
+          {% if user == "no"%}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                Correo o contraseña incorrecta, intentalo de nuevo
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          {% elif user == "false" %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                Primero debes verificar tu cuenta
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          {% elif user == "f" %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                Primero inicia sesión
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          {% endif %}
         </div><br>
         <button type="submit" class="btn btn-primary" style="background-color: #136F33; width:100%; font-size: large;">Entrar</button>
       </form>

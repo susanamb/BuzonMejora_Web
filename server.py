@@ -1,42 +1,85 @@
 from conf import firebase
-from flask import Flask, redirect, render_template,request
+from flask import Flask, redirect, render_template,request, session
+import os
 
 db = firebase.database()
 auth = firebase.auth()
 
+
 app = Flask(__name__)
+app.secret_key = os.urandom(24)
 
 #index con contador de casos resueltos
 @app.route("/") 
 def home():
-    cr = 0
     try:
-        casos_resueltos = db.child("Quejas y Sugerencias").get()
-        for i in casos_resueltos.each():
-            stat = db.child("Quejas y Sugerencias").child(i.key()).child('Status').get()
-            if stat.val() == 'Resuelto':
-                cr = cr + 1
-                
+        if session['usr']:
+            return render_template("menuadmin.html")
     except:
-        print('error')
+        cr = 0
+        try:
+            casos_resueltos = db.child("Quejas y Sugerencias").get()
+            for i in casos_resueltos.each():
+                stat = db.child("Quejas y Sugerencias").child(i.key()).child('Status').get()
+                if stat.val() == 'Resuelto':
+                    cr = cr + 1
+                        
+        except:
+            print('error')
 
-    return render_template("index.html", cr=cr)
+        return render_template("index.html", cr=cr)
 
 #inicio de sesion
 @app.route("/login")
 def login():
-    return render_template("login.html")
+    try:
+        if session['usr']:
+            return render_template("menuadmin.html")
+    except:        
+        return render_template("login.html")
 
 #menu administrador
 @app.route("/menuadmin")
 def menuadmin():
-    return render_template("menuadmin.html")
+    try:
+        if session['usr']:
+            return render_template("menuadmin.html")
+        else:
+            return render_template("login.html")
+    except:
+         return render_template("login.html", user = 'f')
 
 #registo de usuario nuevo
 @app.route('/registro')
 def registro():
+    try:
+        if session['usr']:
+            return render_template("registrouser.html")
+    except:
+        return render_template("login.html", user = 'f')
 
-    return render_template("registrouser.html")
+#guardar usuario nuevo
+@app.route('/saveuser', methods = ['POST'])
+def saveuser():
+    if request.method == 'POST':
+            correo = request.form['correo']
+            contrasena = request.form['contrasena']
+            concontrasena = request.form['confirmacontrasena']
+            cor = correo.endswith("@uabc.edu.mx")  
+
+            if contrasena != concontrasena: # si las contrasenas no coinciden
+                return render_template("registrouser.html", warnin = "claves")
+            elif not cor: # si el correo no es uabc
+                return render_template("registrouser.html", warnin = "correo")
+            elif contrasena == concontrasena and cor: #si los datos son correctos
+                try:
+                    user = auth.create_user_with_email_and_password(correo, contrasena)
+                    auth.send_email_verification(user['idToken'])
+
+                    return render_template("registrouser.html", warnin = "success")
+                except:
+                    return render_template("registrouser.html", warnin = "Contraseña muy debil")
+
 
 #vista p/resetear el password
 @app.route('/resetpass')
@@ -46,40 +89,52 @@ def resetpass():
 #muestra la lista de todas las quejas y sugerencias
 @app.route('/displaydata')
 def displaydata():
-    folios=[]
-    data ={}
-    dato = db.child("Quejas y Sugerencias").get()
-    for i in dato.each():
-        folios.append(i.key())
-        val = db.child("Quejas y Sugerencias").child(i.key()).child("Status").get()
-        data[i.key()] = val.val()
-        
+    try:
+        if session['usr']:
+            folios=[]
+            data ={}
+            dato = db.child("Quejas y Sugerencias").get()
+            for i in dato.each():
+                folios.append(i.key())
+                val = db.child("Quejas y Sugerencias").child(i.key()).child("Status").get()
+                data[i.key()] = val.val()
+                
 
-    return render_template("displaydata.html",data=data)
+            return render_template("displaydata.html",data=data)
+        else:
+            return render_template("login.html")
+    except:
+        return render_template("login.html", user = 'f')
 
 #muestra los datos de la queja/sugerencia seleccionada
 @app.route("/selectedqs/<folio>")
 def selectedqs(folio):
-    if db.child("Quejas y Sugerencias").child(folio).get():
+    try:
+        if session['usr']:
+            if db.child("Quejas y Sugerencias").child(folio).get():
 
-        obs = db.child("Quejas y Sugerencias").child(folio).child("Observacion").get()
-        db.child("Quejas y Sugerencias").child(folio).update({"Status": "Pendiente, leído"})
-        if obs.val():
-            print('hay algo')
-            observacion = obs.val()
-        else:
-            observacion = " "
-        data = {
-            "Categoria":(db.child("Quejas y Sugerencias").child(folio).child("Categoria").get()).val(),
-            "Asunto":(db.child("Quejas y Sugerencias").child(folio).child("Asunto").get()).val(),
-            "Comentario":(db.child("Quejas y Sugerencias").child(folio).child("Comentario").get()).val(),
-            "Status":(db.child("Quejas y Sugerencias").child(folio).child("Status").get()).val(),
-            "Observacion" : observacion
-        }
-        return render_template("selectedqs.html", data = data, folio=folio)
-    else:
-        return "<h1>No existe el folio!</h1>"
+                obs = db.child("Quejas y Sugerencias").child(folio).child("Observacion").get()
+                stat = db.child("Quejas y Sugerencias").child(folio).child("Status").get()
 
+                if stat.val() == "Pendiente, sin leer": #si el comentario esta pendiente y sin leer, al ser abierto saldrá que fue leido
+                    db.child("Quejas y Sugerencias").child(folio).update({"Status": "Pendiente, leído"})
+                
+                if obs.val():
+                    observacion = obs.val()
+                else:
+                    observacion = " "
+                data = {
+                    "Categoria":(db.child("Quejas y Sugerencias").child(folio).child("Categoria").get()).val(),
+                    "Asunto":(db.child("Quejas y Sugerencias").child(folio).child("Asunto").get()).val(),
+                    "Comentario":(db.child("Quejas y Sugerencias").child(folio).child("Comentario").get()).val(),
+                    "Status":(db.child("Quejas y Sugerencias").child(folio).child("Status").get()).val(),
+                    "Observacion" : observacion
+                }
+                return render_template("selectedqs.html", data = data, folio=folio)
+            else:
+                return "<h1>No existe el folio!</h1>"
+    except:
+        return render_template("login.html", user = 'f')
     
 
 #actualiza el status y agrega las observaciones del admin 
@@ -106,22 +161,52 @@ def loginuser():
     if request.method == 'POST':
         correo = request.form['correo']
         contrasena = request.form['contrasena']
-
         
     try:
+        
         user = auth.sign_in_with_email_and_password(correo, contrasena)
         
         if user:
-            return redirect('/menuadmin')
+            print('si existe el usuario, todo bien')
+            user_info = auth.get_account_info(user['idToken'])
+            verified = user_info['users'][0]['emailVerified']
+        
+            #                    
+            if not verified:
+                print('hola, verifica tu cuenta')
+                return render_template("login.html", user = "false")
+            else:    
+                print('hola, ya verificaste, bienvenide')
+                user = auth.refresh(user['refreshToken'])
+                user_id = user['idToken']
+                session['usr'] = user_id
+                return redirect('/menuadmin')
     except:
-        return "<h1>Correo o constraseña incorrecta</h1><p><a href='login'>Intentalo de nuevo</p>"
+        print(' algo no esta saliendo bien ;v' )
+        return render_template("login.html", user = "no")
 
+#para resetear el password
 @app.route("/resetpasswor", methods = ['POST'])
 def ressetpas():
     if request.method == 'POST':
-        correo = request.form['correo']
-        auth.send_password_reset_email(correo)
-    return "<h1>Listo, Revisa tu correo </h1><p><a href='/'>Volver al inicio</p>"
+        if request.form['correo']:
+            correo = request.form['correo']
+            
+            cor = correo.endswith("@uabc.edu.mx")  
+            if cor:
+                try:
+                    
+                    auth.send_password_reset_email(correo)
+                    return render_template("resetpass.html", user = "si")
+                except:
+                    return render_template("resetpass.html", user = "no")
+
+#el usuario cierra sesion
+@app.route("/logout")
+def logout():
+    session['usr'] = 0
+    return render_template("/")
+
 
 if __name__ == "__main__":
     print("running....")

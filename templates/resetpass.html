@@ -8,10 +8,23 @@
         <div class="form-group">
           <p class="lead text-center" style="width: 60%; margin-left: 20%;">Ingresa tu usuario UABC y se enviará un correo con un enlace para restablecer tu contraseña.</p>
           <label for="exampleInputEmail1">Correo UABC</label>
-          <input type="correo" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" style="width: 30%; margin-left: 35%; margin-right: 35%;" value="@uabc.edu.mx">
+          <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" style="width: 30%; margin-left: 35%; margin-right: 35%;" name = "correo" value="@uabc.edu.mx" required>
         </div>
+        {% if user == "no" %}
+          <div class="alert alert-warning" role="alert">
+            Correo inválido
+          </div>
+        {% endif %}
+        {% if user == "si" %}
+          <div class="alert alert-success" role="alert">
+            Listo, revisa tu correo para reestablecer tu contraseña e <a href="login" class="alert-link">iniciar sesión</a>
+            
+          </div>
+        {% endif %}
         <button type="submit" class="btn btn-warning btn-lg">Enviar</button>
-      </form>
+        
+
+    </form>
       <a class="btn btn-outline-success" href="login" role="button" style="position:fixed; bottom: 31%; right: 23%; width: 10%;">Regresar</a>
 
   </div>
