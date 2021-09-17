@@ -30,6 +30,9 @@ def home():
            return render_template("index.html", cr=0)
 
         return render_template("index.html", cr=cr)
+        
+    return render_template("index.html", cr=0)
+
 
 # inicio de sesion
 
@@ -42,6 +45,7 @@ def login():
     except:
         return render_template("login.html")
 
+    return render_template("login.html")
 # menu administrador
 
 
@@ -109,8 +113,7 @@ def displaydata():
             dato = db.child("Quejas y Sugerencias").get()
             for i in dato.each():
                 folios.append(i.key())
-                val = db.child("Quejas y Sugerencias").child(
-                    i.key()).child("Status").get()
+                val = db.child("Quejas y Sugerencias").child(i.key()).child("Status").get()
                 data[i.key()] = val.val()
 
             return render_template("displaydata.html", data=data)
@@ -119,9 +122,35 @@ def displaydata():
     except:
         return render_template("login.html", user='f')
 
+#filtros 
+@app.route("/filterdata/<asunto>")
+def filtros(asunto):
+    try:
+        #a = db.child("Quejas y Sugerencias").order_by_child("Categoria").get()
+        
+        all_data  = db.child("Quejas y Sugerencias").get() #trae la informacion de la base de datos
+        data = {}
+        child = ""
+        if asunto == 'Queja' or asunto == 'Sugerencia': #si se se selecciono queja o sugerencia,          
+            child = "Categoria"                             #entonces se busca en categorias
+        elif asunto == 'Resuelto' or asunto == "Pendientes":#si se selecciono resuelto o pendiente,
+            child = "Status"                                #entonces se busca en status
+
+        for i in all_data.each(): #recorre todos los registros de la bd
+            stat = db.child("Quejas y Sugerencias").child(i.key()).child(child).get()
+            if stat.val() == asunto:
+                dos = db.child("Quejas y Sugerencias").child(i.key()).child("Status").get()
+                data[i.key()] = dos.val()
+            elif stat.val().startswith("Pendiente") and asunto == "Pendientes":
+                dos = db.child("Quejas y Sugerencias").child(i.key()).child("Status").get()
+                data[i.key()] = dos.val()
+
+        return render_template("displaydata.html", data=data)
+    except:     
+        return render_template("menuadmin.html")
+
+
 # muestra los datos de la queja/sugerencia seleccionada
-
-
 @app.route("/selectedqs/<folio>")
 def selectedqs(folio):
     try:
