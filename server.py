@@ -17,18 +17,13 @@ def home():
             return render_template("menuadmin.html")
     except:
         cr = 0
-        try:
-            casos_resueltos = db.child("Quejas y Sugerencias").get()
-            for i in casos_resueltos.each():
-                stat = db.child("Quejas y Sugerencias").child(i.key()).child('Status').get()
-                if stat.val() == 'Resuelto':
-                    cr = cr + 1
-                        
-        except:
-            print('error')
-
+        cr = contadorCasos(cr)
         return render_template("index.html", cr=cr)
 
+    cr = 0
+    cr = contadorCasos(cr)
+    return render_template("index.html", cr=cr)
+    
 #inicio de sesion
 @app.route("/login")
 def login():
@@ -36,7 +31,9 @@ def login():
         if session['usr']:
             return render_template("menuadmin.html")
     except:        
-        return render_template("login.html")
+        return render_template("login.html", user = ' ')
+
+    return render_template("login.html")
 
 #menu administrador
 @app.route("/menuadmin")
@@ -102,7 +99,7 @@ def displaydata():
 
             return render_template("displaydata.html",data=data)
         else:
-            return render_template("login.html")
+            return render_template("login.html", user = 'f')
     except:
         return render_template("login.html", user = 'f')
 
@@ -138,7 +135,6 @@ def selectedqs(folio):
     
 
 #actualiza el status y agrega las observaciones del admin 
-#--------------PENDIENTE!------------------
 @app.route('/update/<folio>', methods = ['POST'])
 def update(folio):
 
@@ -204,9 +200,27 @@ def ressetpas():
 #el usuario cierra sesion
 @app.route("/logout")
 def logout():
-    session['usr'] = 0
-    return render_template("/")
+    try:
+        session['usr'] = 0
+        cr = 0
+        cr = contadorCasos(cr)
+        return render_template("index.html", cr=cr)
+    except:
+        return redirect("/")
 
+
+#cuenta los casos resueltos de la base de datos
+def contadorCasos(cr):
+    try:
+            casos_resueltos = db.child("Quejas y Sugerencias").get()
+            for i in casos_resueltos.each():
+                stat = db.child("Quejas y Sugerencias").child(i.key()).child('Status').get()
+                if stat.val() == 'Resuelto':
+                    cr = cr + 1                      
+    except:
+            print('error')
+            cr = 0
+    return cr
 
 if __name__ == "__main__":
     print("running....")
