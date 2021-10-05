@@ -1,8 +1,35 @@
 {% extends "layout.html" %}
 {% block content %}
+<!-- Example single danger button -->
+<div class="btn-group" style="margin-left: 60%; width: 12%; font-size: larger;">
+    <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Ver
+    </button>
+    <div class="dropdown-menu" >
+      <a class="dropdown-item" href="#login">Inicio de Sesion</a>
+      <a class="dropdown-item" href="#restablecerclave">Restablecer Contraseña</a>
+      <a class="dropdown-item" href="#menuadmin">Menu</a>
+      <a class="dropdown-item" href="#filtros">Filtrar informacion</a>
+      <a class="dropdown-item" href="#gestion">Gestionar Q/S</a>
+      <a class="dropdown-item" href="#menuadmin">Registro de usuarios nuevos</a>
 
-<div>
-    <embed src="file/manual_admin.pdf" type="application/pdf" width="600px" height="900px"/>
+
+    </div>
+  </div>
+<div style="text-align: center;">
+    <img src="static/img/manual_admin_page-0001.jpg" alt="?">
+    <img src="static/img/manual_admin_page-0002.jpg" alt="?" id="contenido">
+    <img src="static/img/manual_admin_page-0003.jpg" alt="?" id="inicio">
+    <img src="static/img/manual_admin_page-0004.jpg" alt="?" id="login">
+    <img src="static/img/manual_admin_page-0005.jpg" alt="?" id="restablecerclave">
+    <img src="static/img/manual_admin_page-0006.jpg" alt="?" id="">
+    <img src="static/img/manual_admin_page-0007.jpg" alt="?" id="">
+    <img src="static/img/manual_admin_page-0008.jpg" alt="?" id="menuadmin">
+    <img src="static/img/manual_admin_page-0009.jpg" alt="?" id="filtros">
+    <img src="static/img/manual_admin_page-0010.jpg" alt="?" id="gestion">
+    <img src="static/img/manual_admin_page-0011.jpg" alt="?" id="registro">
+
 </div>
-    
+<a class="btn btn-outline-success" href="javascript:history.back()" role="button" style="position:fixed; bottom: 7%; right: 12%; width: 10%;">Regresar</a>
+
 {% endblock %}

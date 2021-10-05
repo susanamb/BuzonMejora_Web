@@ -21,9 +21,7 @@ def home():
         cr = contadorCasos(cr)
         return render_template("index.html", cr=cr)
         
-    return render_template("index.html", cr=0)
-
-
+    
 # inicio de sesion
 
 
@@ -42,7 +40,6 @@ def login():
 
     return render_template("login.html")
 
-    return render_template("login.html")
 # menu administrador
 
 
